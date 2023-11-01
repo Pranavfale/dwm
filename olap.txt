@@ -1,0 +1,104 @@
+CREATE TABLE Smartphones ( S_ID VARCHAR(5) PRIMARY KEY, Model VARCHAR(50), Manufacturer VARCHAR(50), StorageCapacity INT, RAM INT, OS VARCHAR(50), Price INT );
+
+CREATE TABLE Customers ( C_ID INT PRIMARY KEY, FirstName VARCHAR(20), LastName VARCHAR(20), Phone INT, Address VARCHAR(50));
+
+
+CREATE TABLE Employees (
+
+E_ID VARCHAR(5) PRIMARY KEY, FirstName VARCHAR(20),
+
+LastName VARCHAR(20),
+
+Email VARCHAR(50),
+
+Phone INT,
+
+Department VARCHAR(50),
+
+JobTitle VARCHAR(50)
+
+);
+
+CREATE TABLE Orders (
+
+OrderID VARCHAR(5) PRIMARY KEY,
+
+C_ID INT,
+
+S_ID VARCHAR(5),
+
+OrderDate DATE,
+
+Quantity INT,
+
+TotalAmount INT,
+
+FOREIGN KEY (C_ID)
+
+REFERENCES Customers (C_ID), FOREIGN KEY (S_ID) REFERENCES Smartphones (S_ID));
+
+
+INSERT INTO SMARTPHONES VALUES ('S1', 'iPhone 12', 'Apple', 128, 4, 'ios', 116000); INSERT INTO SMARTPHONES VALUES ('S2', 'Galaxy S21', 'Samsung', 256, 8, 'Android', 78000); INSERT INTO SMARTPHONES VALUES ('S3', 'Vivo Y35', 'Vivo', 128, 6, 'Android', 18000); INSERT INTO SMARTPHONES VALUES ('S4', 'Oppo F21 series', 'OnePlus', 256, 12, 'Android', 39000); INSERT INTO SMARTPHONES VALUES ('S5', 'OnePlus Nord Plus', 'OnePlus', 256, 12, 'Android', 50000);
+
+
+
+
+INSERT INTO CUSTOMERS VALUES (10001, 'Raghav', 'Sharma', 'raghav094@gmail.com',9867867858, 'A296 Sagar Apartment Mumbai'); INSERT INTO CUSTOMERS VALUES (10002, 'Arya', 'Raut', 'arya56@gmail.com',7985868554, 'Sector 5 Dombivli'); INSERT INTO CUSTOMERS VALUES (10003, 'Suryansh', 'Gupta', 'surya14@gmail.com',5697795508, 'A296 DN nagar Bhiwandi'); INSERT INTO CUSTOMERS VALUES (10004, 'Rohan', 'Jhadhav', 'rohan56@gmail.com',9896967956, 'A76 Kalyan'); INSERT INTO CUSTOMERS VALUES (1005, 'Arpit', 'Singh', 'arpit54@gmail.com',8977596797, 'Ambarnath');
+
+
+
+INSERT INTO Employees VALUES ('E101', 'Devika', 'Patil', 'patildevika66n@google.com',9868785058, 'Sales', 'Sales Manager"); INSERT INTO Employees VALUES ('E102', 'Mahesh', 'Gupta', 'mahesh45@gmail.com',9875856860, 'Marketing', 'Marketing Specialist'); INSERT INTO Employees VALUES ('E103', 'Michael", "Williams', 'michael.williams@google.com", 7254697999, 'IT', 'IT Administrator");
+
+
+INSERT INTO Orders VALUES ('01001', 10005, 'S2', '23-08-01', 2, 120000); INSERT INTO Orders VALUES ('01002', 10002, 'S5', '22-07-02', 1, 55000); INSERT INTO Orders VALUES ('01003', 10004, 'S1', '23-09-12', 1, 130000); INSERT INTO Orders VALUES ('01004', 10001, 'S3', '23-05-10', 3, 50000);
+
+
+
+//rollup
+
+SELECT Manufacturer, SUM(TotalAmount) AS TotalSales Amount
+
+FROM Smartphones
+
+JOIN Orders ON Smartphones.S_ID = Orders.S_ID
+
+GROUP BY Manufacturer;
+
+
+//drill down
+
+SELECT Smartphones. Model, Smartphones. Manufacturer, Orders.Order ID, Orders. OrderDate, Orders. TotalAmount, Customers.FirstName, Customers. LastName, Customers.Phone FROM Smartphones
+
+JOIN Orders ON Smartphones.S_ID = Orders.S_ID
+
+JOIN Customers ON Orders.C_ID= Customers.C_ID
+
+ORDER BY Smartphones.Model, Smartphones.Manufacturer, Orders. OrderID;
+
+//dice
+
+SELECT *
+
+FROM Orders
+
+JOIN Smartphones ON Orders.S_ID = Smartphones.S_ID
+
+WHERE Smartphones.Manufacturer = 'Apple';
+
+//pivot
+SELECT OrderID, Model,
+
+SUM(CASE WHEN Model='iPhone 12' AND OrderDate='23-09-12' THEN TotalAmount ELSE 0 END) AS MSales, SUM(CASE WHEN Quantity =2 AND Model='Galaxy S21' THEN TotalAmount ELSE 0 END) AS ASales,
+
+SUM(TotalAmount) AS Total_Sales
+
+FROM Smartphones
+
+JOIN Orders ON Smartphones.S_ID = Orders.S_ID
+
+GROUP BY Model, OrderID;
+
+
+//slice
+select*from orders where orderdate = to_date('23-09-12'
+,'DD-MM-YYYY');
