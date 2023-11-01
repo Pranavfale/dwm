@@ -1,0 +1,40 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv('iris.csv')
+
+numerical_columns = ['sepal_length', 'sepal_width', 'petal_width', 'petal_length']
+# Calculate mean, median, variance, and standard deviation for each numerical column
+for column in numerical_columns:
+mean_value = data[column].mean()
+median_value = data[column].median()
+variance_value = data[column].var()
+std_deviation_value = data[column].std()
+print(f"Column: {column}")
+print(f"Mean: {mean_value:.2f}")
+print(f"Median: {median_value:.2f}")
+print(f"Variance: {variance_value:.2f}")
+print(f"Standard Deviation: {std_deviation_value:.2f}")
+print("-" * 20)
+
+sns.set(style="whitegrid")
+
+plt.figure(figsize=(12, 8))
+sns.boxplot(data=data.drop(columns='species'), orient='v')
+plt.title("Combined Box Plot of Numerical Columns by Species")
+plt.xticks(rotation=45)
+plt.savefig('Boxplot')
+plt.show()
+# Select numerical columns
+numerical_columns = ['sepal_length', 'sepal_width', 'petal_width', 'petal_length']
+
+plt.figure(figsize=(12, 8))
+for column in numerical_columns:
+plt.hist(data[column], bins=20, alpha=0.7, label=column)
+plt.title("Histograms of Numerical Columns")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.legend()
+plt.savefig("histogram")
+plt.show()
