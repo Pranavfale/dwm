@@ -1,0 +1,14 @@
+classHTM:
+def init__(self,input_size,output_size):
+self.weights=np.random.rand(output_size,input_size)
+
+defforward(self,input_data):
+returnnp.dot(self.weights,input_data)
+
+#Exampleusage:
+importnumpyasnp
+
+input_data=np.array([0.2,0.4,0.1,0.8,0.5])input_size= len(input_data)
+output_size=3
+
+htm=HTM(input_size,output_size)output = htm.forward(input_data)print("HTM output:",output)
